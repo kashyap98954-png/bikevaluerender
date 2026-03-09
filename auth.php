@@ -22,7 +22,6 @@ if ($action === 'signup') {
     }
 
     $pdo = db();
-    // Check if user_id OR email already exists
     $stmt = $pdo->prepare('SELECT id FROM users WHERE user_id = ? OR email = ?');
     $stmt->execute([$user_id, $email]);
     if ($stmt->fetch()) {
@@ -33,7 +32,7 @@ if ($action === 'signup') {
 
     $hash = password_hash($password, PASSWORD_DEFAULT);
     $ins  = $pdo->prepare('INSERT INTO users (user_id, email, password, role) VALUES (?, ?, ?, ?)');
-$ins->execute([$user_id, $email, $hash, 'user']);
+    $ins->execute([$user_id, $email, $hash, 'user']);
 
     $_SESSION['user_id'] = $user_id;
     $_SESSION['email']   = $email;
@@ -47,8 +46,8 @@ if ($action === 'user_login') {
     $password = $_POST['password'] ?? '';
 
     $pdo  = db();
-    $stmt = $pdo->prepare('SELECT * FROM users WHERE email = ? AND role = "user"');
-    $stmt->execute([$email]);
+    $stmt = $pdo->prepare('SELECT * FROM users WHERE email = ? AND role = ?');
+    $stmt->execute([$email, 'user']);
     $user = $stmt->fetch();
 
     if ($user && password_verify($password, $user['password'])) {
@@ -69,8 +68,8 @@ if ($action === 'admin_login') {
     $password = $_POST['password'] ?? '';
 
     $pdo  = db();
-    $stmt = $pdo->prepare('SELECT * FROM users WHERE email = ? AND role = "admin"');
-    $stmt->execute([$email]);
+    $stmt = $pdo->prepare('SELECT * FROM users WHERE email = ? AND role = ?');
+    $stmt->execute([$email, 'admin']);
     $admin = $stmt->fetch();
 
     if ($admin && password_verify($password, $admin['password'])) {
