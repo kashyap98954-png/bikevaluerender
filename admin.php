@@ -3,13 +3,13 @@ session_start();
 require_once __DIR__ . '/config.php';
 if (empty($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') { header('Location: index.php'); exit; }
 $pdo=db();
-$total_users=$pdo->query('SELECT COUNT(*) FROM users WHERE role="user"')->fetchColumn();
+$total_users=$pdo->query("SELECT COUNT(*) FROM users WHERE role='user'")->fetchColumn();
 $total_preds=$pdo->query('SELECT COUNT(*) FROM predictions')->fetchColumn();
 $with_acc=$pdo->query('SELECT COUNT(*) FROM predictions WHERE accident_count>0')->fetchColumn();
 $avg_price=$pdo->query('SELECT AVG(predicted_price) FROM predictions')->fetchColumn()??0;
 $ml_count=$pdo->query('SELECT COUNT(*) FROM predictions WHERE ml_price IS NOT NULL')->fetchColumn();
 $brand_data=$pdo->query('SELECT brand,COUNT(*) AS cnt FROM predictions GROUP BY brand ORDER BY cnt DESC')->fetchAll();
-$users=$pdo->query('SELECT user_id,email,created_at FROM users WHERE role="user" ORDER BY created_at DESC')->fetchAll();
+$users=$pdo->query("SELECT user_id,email,created_at FROM users WHERE role='user' ORDER BY created_at DESC")->fetchAll();
 $predictions=$pdo->query('SELECT * FROM predictions ORDER BY created_at DESC')->fetchAll();
 $tab=$_GET['tab']??'dashboard';
 ?>
