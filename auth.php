@@ -32,8 +32,8 @@ if ($action === 'signup') {
     }
 
     $hash = password_hash($password, PASSWORD_DEFAULT);
-    $ins  = $pdo->prepare('INSERT INTO users (user_id, email, password, role) VALUES (?, ?, ?, "user")');
-    $ins->execute([$user_id, $email, $hash]);
+    $ins  = $pdo->prepare('INSERT INTO users (user_id, email, password, role) VALUES (?, ?, ?, ?)');
+$ins->execute([$user_id, $email, $hash, 'user']);
 
     $_SESSION['user_id'] = $user_id;
     $_SESSION['email']   = $email;
